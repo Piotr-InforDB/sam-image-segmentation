@@ -7,9 +7,6 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import math
 
-# ===============================
-# CONFIG
-# ===============================
 MODEL_PATH = "best_model.pth"
 IMAGE_FOLDER = "segments"
 IMG_SIZE = 256
@@ -17,9 +14,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 BATCH_SIZE_VIS = 12
 
 
-# ===============================
-# MODEL DEFINITION (same as training)
-# ===============================
+
 class RoofClassifier(nn.Module):
     def __init__(self, num_classes=2):
         super().__init__()
@@ -80,9 +75,7 @@ class RoofClassifier(nn.Module):
         return x
 
 
-# ===============================
-# MODEL LOADING
-# ===============================
+
 def load_model(model_path, num_classes=2):
     model = RoofClassifier(num_classes=num_classes)
     model.load_state_dict(torch.load(model_path, map_location=DEVICE))
@@ -91,9 +84,7 @@ def load_model(model_path, num_classes=2):
     return model
 
 
-# ===============================
-# TRANSFORM
-# ===============================
+
 transform = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.ToTensor(),
@@ -101,9 +92,6 @@ transform = transforms.Compose([
 ])
 
 
-# ===============================
-# INFERENCE + VISUALIZATION
-# ===============================
 def classify_folder(model_path, folder_path, class_names=("other", "roof")):
     model = load_model(model_path, num_classes=len(class_names))
     image_paths = [p for p in Path(folder_path).glob("*") if p.suffix.lower() in [".png", ".jpg", ".jpeg"]]
@@ -157,9 +145,7 @@ def classify_folder(model_path, folder_path, class_names=("other", "roof")):
     return results
 
 
-# ===============================
-# MAIN
-# ===============================
+
 if __name__ == "__main__":
     results = classify_folder(MODEL_PATH, IMAGE_FOLDER)
 

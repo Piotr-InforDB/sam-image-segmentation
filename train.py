@@ -143,9 +143,7 @@ def classify_image(img_path, model_path=MODEL_PATH):
 if __name__ == '__main__':
     prepare_dataset()
 
-    # -----------------------
-    # TRANSFORMS
-    # -----------------------
+
     train_transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.RandomVerticalFlip(),
@@ -163,9 +161,7 @@ if __name__ == '__main__':
     train_dataset = datasets.ImageFolder(os.path.join(TEMP_DIR, "train"), transform=train_transform)
     val_dataset = datasets.ImageFolder(os.path.join(TEMP_DIR, "val"), transform=val_transform)
 
-    # -----------------------
-    # SAMPLER
-    # -----------------------
+
     class_counts = [len([x for x, y in train_dataset.samples if y == i]) for i in range(len(train_dataset.classes))]
     class_weights = 1. / torch.tensor(class_counts, dtype=torch.float)
     sample_weights = [class_weights[y] for _, y in train_dataset.samples]
@@ -178,9 +174,7 @@ if __name__ == '__main__':
     print(f"Class mapping: {train_dataset.class_to_idx}")
     print(f"Training on: {DEVICE}")
 
-    # -----------------------
-    # MODEL SETUP
-    # -----------------------
+
     model = RoofClassifier(num_classes=len(train_dataset.classes)).to(DEVICE)
 
     # Count parameters
@@ -189,9 +183,7 @@ if __name__ == '__main__':
     print(f"Total parameters: {total_params:,}")
     print(f"Trainable parameters: {trainable_params:,}")
 
-    # -----------------------
-    # TRAINING SETUP
-    # -----------------------
+
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LR, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.5,
