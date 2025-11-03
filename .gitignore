@@ -1,0 +1,9 @@
+/cutouts/
+/datasets/
+/images/
+/iou/
+/sam_models/sam_vit_h_4b8939.pth
+/segments/
+/temp_dataset/
+/best_model.pth
+.idea
